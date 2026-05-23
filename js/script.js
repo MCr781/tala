@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileNav = document.querySelector('.mobile-nav');
     const mobileCloseBtn = document.querySelector('.mobile-close');
     const isInternalPage = body.classList.contains('internal-page');
-    
+
     // A. Header State (Scroll/Hover)
     if (header) {
       const updateHeaderState = () => {
         // If internal page, ALWAYS active.
         if (isInternalPage) {
-            header.classList.add('scrolled');
-            return;
+          header.classList.add('scrolled');
+          return;
         }
 
         const scrollY = window.scrollY || document.documentElement.scrollTop;
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.addEventListener('scroll', updateHeaderState, { passive: true });
       header.addEventListener('mouseenter', updateHeaderState);
       header.addEventListener('mouseleave', updateHeaderState);
-      
+
       // Init
       updateHeaderState();
     }
@@ -64,12 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       document.addEventListener('click', (e) => {
         if (body.classList.contains('mobile-nav-active') &&
-            !mobileNav.contains(e.target) &&
-            !burgerBtn.contains(e.target)) {
+          !mobileNav.contains(e.target) &&
+          !burgerBtn.contains(e.target)) {
           toggleMenu(false);
         }
       });
-      
+
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') toggleMenu(false);
       });
@@ -83,7 +83,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = targetDetail.querySelector('.mobile-submenu__wrapper');
 
         summary.addEventListener('click', (e) => {
-          e.preventDefault(); 
+          // Check if the click was targeted at or inside the chevron icon
+          const isChevron = e.target.closest('i');
+
+          if (!isChevron) {
+            // Clicked text or background: Navigate directly to the collection page
+            e.preventDefault();
+            const titleText = summary.querySelector('span')?.textContent.trim();
+            const desktopLink = Array.from(document.querySelectorAll('.desktop-nav .nav-link'))
+              .find(link => link.textContent.trim() === titleText);
+
+            if (desktopLink && desktopLink.href) {
+              window.location.href = desktopLink.href;
+            }
+            return;
+          }
+
+          // If chevron was clicked, handle the smooth accordion accordion logic
+          e.preventDefault();
 
           // Close siblings
           mobileDetails.forEach(other => {
@@ -103,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             targetDetail.setAttribute('open', '');
             requestAnimationFrame(() => {
-               content.style.height = content.scrollHeight + 'px';
-               content.style.opacity = '1';
+              content.style.height = content.scrollHeight + 'px';
+              content.style.opacity = '1';
             });
           }
         });
@@ -113,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // D. Desktop Mega Menu (Seamless & Sticky)
     const megaMenuItems = document.querySelectorAll('.nav-item.has-megamenu');
-    
+
     if (megaMenuItems.length && header) {
       // 1. Open on Hover
       megaMenuItems.forEach(item => {
@@ -122,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
           megaMenuItems.forEach(other => {
             if (other !== item) other.classList.remove('menu-is-open');
           });
-          
+
           item.classList.add('menu-is-open');
           header.classList.add('menu-is-open');
         });
@@ -135,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Re-check scroll state to see if we should stay white or go transparent
         const scrollY = window.scrollY || document.documentElement.scrollTop;
         if (scrollY < 50 && !isInternalPage) {
-            header.classList.remove('scrolled');
+          header.classList.remove('scrolled');
         }
       });
     }
@@ -174,11 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const modal = document.getElementById(modalId);
       if (!modal) return;
-      
+
       document.body.classList.add('modal-is-active');
       modal.style.display = 'flex';
       modal.setAttribute('aria-hidden', 'false');
-      
+
       requestAnimationFrame(() => {
         modal.style.opacity = '1';
         modal.style.visibility = 'visible';
@@ -198,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.setAttribute('aria-hidden', 'true');
         const content = overlay.querySelector('.modal-content, .search-overlay__content');
         if (content) {
-          content.style.transform = ''; 
+          content.style.transform = '';
           content.style.opacity = '';
         }
         setTimeout(() => { overlay.style.display = 'none'; }, 300);
@@ -216,8 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (target.classList.contains('search-toggle')) {
         e.preventDefault(); openModal('searchOverlay');
       } else if (target.classList.contains('calc-btn')) {
-          // --- NEW LINE TO OPEN CALCULATOR MODAL ---
-          e.preventDefault(); openModal('calcModal');
+        // --- NEW LINE TO OPEN CALCULATOR MODAL ---
+        e.preventDefault(); openModal('calcModal');
       }
     });
 
@@ -235,10 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 4. Swiper Sliders ---
   const initSliders = () => {
     if (typeof Swiper === 'undefined') return;
-    
+
     document.querySelectorAll('.collection__container.swiper, .related-products .swiper').forEach(slider => {
       new Swiper(slider, {
-        dir: 'rtl', 
+        dir: 'rtl',
         loop: true,
         spaceBetween: 15,
         slidesPerView: 1.4,
@@ -268,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loop: true,
         spaceBetween: 30,
         slidesPerView: 1,
-        grabCursor: true, 
+        grabCursor: true,
         pagination: { el: '.testimonial-pagination', clickable: true },
         autoplay: { delay: 5000, disableOnInteraction: true },
         breakpoints: {
@@ -290,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (altSrc) {
         card.addEventListener('mouseenter', () => {
-          if (!img.dataset.colorActive) { 
+          if (!img.dataset.colorActive) {
             img.style.opacity = '0';
             setTimeout(() => { img.src = altSrc; img.style.opacity = '1'; }, 150);
           }
@@ -344,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gallery Swap
     if (galleryImg && thumbnails.length) {
       thumbnails.forEach(thumb => {
-        thumb.addEventListener('click', function() {
+        thumb.addEventListener('click', function () {
           thumbnails.forEach(t => t.classList.remove('active'));
           this.classList.add('active');
           const thumbImage = this.querySelector('img');
@@ -385,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (qtyInput.value > 1) qtyInput.value--;
       });
     }
-    
+
     // Tabs
     const tabBtns = document.querySelectorAll('.pdp-tab-btn');
     if (tabBtns.length) {
@@ -404,8 +421,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const initMap = () => {
     const mapSection = document.querySelector('.contact-map');
     if (mapSection) {
-      mapSection.addEventListener('click', function() { this.classList.add('active'); });
-      mapSection.addEventListener('mouseleave', function() { this.classList.remove('active'); });
+      mapSection.addEventListener('click', function () { this.classList.add('active'); });
+      mapSection.addEventListener('mouseleave', function () { this.classList.remove('active'); });
     }
   };
 
@@ -436,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 9. Visual Forms ---
   const initForms = () => {
     document.querySelectorAll('.submit-btn, .form-buttons .button').forEach(btn => {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function () {
         this.classList.add('clicked');
         setTimeout(() => this.classList.remove('clicked'), 200);
       });
@@ -467,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const elHours = document.getElementById('timer-hours');
     const elMinutes = document.getElementById('timer-minutes');
     const elSeconds = document.getElementById('timer-seconds');
-    
+
     // Circle Elements (for progress animation)
     const circles = timerEl.querySelectorAll('.timer-circle-progress');
     // Circumference = 2 * PI * r (r=45) ≈ 283
@@ -493,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update Text
       // Helper to pad numbers (e.g. 5 -> 05)
       const pad = (n) => n < 10 ? '0' + n : n;
-      
+
       elDays.innerText = pad(days);
       elHours.innerText = pad(hours);
       elMinutes.innerText = pad(minutes);
@@ -519,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTimer();
     const timerInterval = setInterval(updateTimer, 1000);
   };
-  
+
   // Call the function
   initTimer();
 
@@ -535,37 +552,37 @@ document.addEventListener('DOMContentLoaded', () => {
       progressBar.style.width = scrolled + '%';
     }, { passive: true });
   };
-  
+
   // Call the function
-    initProgressBar();
+  initProgressBar();
 
-    // --- 12. FAQ Accordion Animation ---
-    const initFAQ = () => {
-        const faqItems = document.querySelectorAll('.faq-item');
+  // --- 12. FAQ Accordion Animation ---
+  const initFAQ = () => {
+    const faqItems = document.querySelectorAll('.faq-item');
 
-        faqItems.forEach(item => {
-            const questionBtn = item.querySelector('.faq-question');
-            const answer = item.querySelector('.faq-answer');
+    faqItems.forEach(item => {
+      const questionBtn = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
 
-            questionBtn.addEventListener('click', () => {
-                const isOpen = item.classList.contains('active');
+      questionBtn.addEventListener('click', () => {
+        const isOpen = item.classList.contains('active');
 
-                // Optional: Close all other open FAQs
-                faqItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                    otherItem.querySelector('.faq-answer').style.maxHeight = null;
-                });
-
-                if (!isOpen) {
-                    item.classList.add('active');
-                    // Set max-height to the scrollHeight for a smooth slide down
-                    answer.style.maxHeight = answer.scrollHeight + "px";
-                }
-            });
+        // Optional: Close all other open FAQs
+        faqItems.forEach(otherItem => {
+          otherItem.classList.remove('active');
+          otherItem.querySelector('.faq-answer').style.maxHeight = null;
         });
-    };
 
-    initFAQ();
+        if (!isOpen) {
+          item.classList.add('active');
+          // Set max-height to the scrollHeight for a smooth slide down
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        }
+      });
+    });
+  };
+
+  initFAQ();
 });
 
 /* ==================== 2.0 PROFILE PAGE TABS ==================== */
@@ -577,8 +594,8 @@ document.addEventListener('DOMContentLoaded', () => {
     tabButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         // Only prevent default if it's a real button, not a link
-        if(btn.tagName !== 'A') e.preventDefault();
-        
+        if (btn.tagName !== 'A') e.preventDefault();
+
         const targetTab = btn.getAttribute('data-tab');
 
         // 1. Update Buttons
@@ -597,11 +614,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. Optional: Scroll to top of content on mobile
         if (window.innerWidth < 992) {
           const contentArea = document.querySelector('.profile-content');
-          if(contentArea) {
-             window.scrollTo({
-               top: contentArea.offsetTop - 100,
-               behavior: 'smooth'
-             });
+          if (contentArea) {
+            window.scrollTo({
+              top: contentArea.offsetTop - 100,
+              behavior: 'smooth'
+            });
           }
         }
       });
