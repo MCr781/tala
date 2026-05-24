@@ -4135,7 +4135,8 @@ html {
 .pdp-gallery__thumbnails {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-  gap: 0.8rem;
+  gap: 0.3rem;
+  /* Decreased gap */
 }
 
 .pdp-thumbnail {
@@ -10167,7 +10168,7 @@ button svg {
 @media (max-width: 600px) {
   .pdp-gallery__thumbnails {
     grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
-    gap: 0.55rem;
+    gap: 0.2rem;
   }
 
   .pdp-thumbnail {
@@ -10237,5 +10238,31 @@ button svg {
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+/* --- Fix for Thumbnail Spacing --- */
+.pdp-gallery__thumbnails {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 0.4rem !important;
+  /* <-- This is the actual gap. Tweak as needed. */
+}
+
+.pdp-thumbnail {
+  width: 85px !important;
+  /* Fixed width stops the dead-space issue */
+  max-width: none !important;
+  flex: 0 0 auto;
+}
+
+/* Make them slightly smaller on mobile screens */
+@media (max-width: 600px) {
+  .pdp-gallery__thumbnails {
+    gap: 0.3rem !important;
+  }
+
+  .pdp-thumbnail {
+    width: 65px !important;
   }
 }
